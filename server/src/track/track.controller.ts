@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Query,
   Post,
   UploadedFiles,
   UseInterceptors,
@@ -16,7 +17,8 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @Controller('/tracks')
 export class TrackController {
-  constructor(private trackService: TrackService) {}
+  constructor(private trackService: TrackService) {
+  }
 
   @UseInterceptors(
     FileFieldsInterceptor([
@@ -30,8 +32,15 @@ export class TrackController {
     return this.trackService.create(dto, picture[0], audio[0]);
   }
 
+  @Get('/search')
+  search(@Query('query') query: string,
+  ) {
+    return this.trackService.search(query);
+  }
+
   @Get()
-  getAll() {
+  getAll(@Query('count') count: number,
+         @Query('offset') offset: number) {
     return this.trackService.getAll();
   }
 
